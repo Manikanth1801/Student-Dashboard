@@ -19,6 +19,8 @@ import {
   Media,
 } from "reactstrap";
 
+let details = JSON.parse(localStorage.getItem('details'))
+console.log(details)
 const AdminNavbar = (props) => {
   return (
     <>
@@ -57,7 +59,7 @@ const AdminNavbar = (props) => {
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
                     <span className="mb-0 text-sm font-weight-bold">
-                      Manikantha Paigrahi
+                     {details.firstName}
                     </span>
                   </Media>
                 </Media>

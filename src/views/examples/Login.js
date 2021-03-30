@@ -1,6 +1,7 @@
 
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, Redirect, useHistory } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 // reactstrap components
 import {
@@ -31,6 +32,8 @@ const Login = () => {
     password:"",
   }
   const [LoginData, setLoginData] = useState(loginData);
+      const history = useHistory();
+
   
 
   const{register, handleSubmit} = useForm();
@@ -42,47 +45,6 @@ const Login = () => {
   });
 
 
-  // const onSubmit = (data) => {
-  //   console.log(data);
-  //   console.log(LoginData);
-  //   setLoginData(data)
-  //   // setLoginData(prevLoginData => ({prevLoginData,...data}));
-  //   console.log(LoginData);
-    
-  // }
-  // const myFun = () => {
-  //   debugger
-  //   const requestOptions = {
-  //     method: 'POST',
-  //     mode: 'no-cors',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       "Accept": 'application/json',
-  //     },
-  //     body: LoginData,
-  //   };
-
-  //   fetch("http://localhost:3000/login/", requestOptions)
-  //     .then(res => res.json())
-  //     .then((data) => {
-  //       console.log(data);
-  //     })
-  // }
-
-
-  // useEffect(() => {
-  //   console.log(LoginData);  //componentdidMount
-   
-  //   // axios({
-  //   //   method:'POST',
-  //   //   url:'http://localhost:4000/login',
-  //   //   mode:'no-cors',
-  //   //   data:{
-  //   //     EmailAddress:LoginData.email,
-  //   //     password: LoginData.password,
-  //   //   }
-  //   // })
-  // }, [LoginData])
 
   const handleInputChange = (e) =>{
      setLoginData({
@@ -94,21 +56,40 @@ const Login = () => {
   
 
   const onSubmit = data =>{
+    
     console.log(LoginData);
     axios({
       method:'POST',
       mode:'no-cors',
-      url:'http://localhost:4000/login',
+      url: 'http://192.168.100.7:3000/login',
       data:LoginData,
     }).then(res=>
       {
+        //users/authenticate/
+        // if (res.data.token!=null){
+        //   console.log(res.data.token)
+          
+        //  return <Link to = 'admin/index'/>  
+        // }
+
         
-        console.log(res)
-        if(res.status == 200){
-         return <NavLink to= "/index"/>
+
+        if(res){
+
+          let token = res.data.accesstoken;
+          let decoded = jwt_decode(token);
+          
+          localStorage.setItem('details', JSON.stringify(decoded));
+          let temp = JSON.parse(localStorage.getItem('details'));
+          console.log(temp.id);
+          history.push(`/admin/index:`)
+          
+        
         }
+
       }).catch(
       err=>{
+        alert("Not a member")
         console.log(err,"error---------")
       }
     )
@@ -124,7 +105,11 @@ const Login = () => {
     
   // }
 
-
+  // if(localStorage.getItem('token')!=null){
+  //   return <Redirect to = '/admin/index'/>
+  // }
+  // else{
+    
   return (
     <>
       <Col lg="5" md="7">
@@ -269,6 +254,7 @@ const Login = () => {
       </Col>
     </>
   );
+  // }
 };
 
 export default Login;
