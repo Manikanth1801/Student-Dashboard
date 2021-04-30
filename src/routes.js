@@ -6,6 +6,12 @@ import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
 import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
+import ConfirmEmail from "./views/examples/ConfirmEmail";
+import ResetPassword from "./views/examples/ResetPassword";
+import ConfirmPassword from "./views/examples/ConfirmPassword";
+import ResetPasswordSuccess from "./views/examples/ResetPasswordSuccess";
+
+
 
 var routes = [
   {
@@ -51,6 +57,35 @@ var routes = [
     component: Login,
     layout: "/auth",
   },
+  {
+    path: "/confirm-email/:id",
+    name: "Confirm Email",
+    icon: "ni ni-check-bold text-green",
+    component: ConfirmEmail,
+    layout: "/auth",
+    api: true
+  }, {
+    path: "/reset-password",
+    name: "Reset Password",
+    icon: "ni ni-folder-17 text-pink",
+    component: ResetPassword,
+    layout: "/auth",
+    api: true
+  }, {
+    path: "/confirm-password/:id",
+    name: "Confirm Password",
+    icon: "ni ni-folder-17 text-pink",
+    component: ConfirmPassword,
+    layout: "/auth",
+    api: true
+  }, {
+    path: "/reset-success",
+    name: "Password Reset Confirmed",
+    icon: "ni ni-folder-17 text-pink",
+    component: ResetPasswordSuccess,
+    layout: "/auth",
+    api: false
+  }
   // {
   //   path: "/register",
   //   name: "Register",

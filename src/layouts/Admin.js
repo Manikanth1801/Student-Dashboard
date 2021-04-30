@@ -7,8 +7,23 @@ import { Container } from "reactstrap";
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import AdminFooter from "components/Footers/AdminFooter"; 
 import Sidebar from "components/Sidebar/Sidebar.js";
+import * as Aes from 'aes-256-gcm'
 
 import routes from "routes.js";
+
+
+ if (JSON.parse(localStorage.getItem('details')) != null) {
+   let newTemp = JSON.parse(localStorage.getItem('details'))
+   const SHARED_SECRET = '12345678901234567890123456789012';
+   let {
+     ciphertext,
+     iv,
+     tag
+   } = Aes.encrypt(newTemp.password, SHARED_SECRET);
+   console.log(Aes.decrypt(ciphertext, iv, tag, SHARED_SECRET));
+ } else {
+   console.log('wasteeeeeeee')
+ }
 
 const Admin = (props) => {
   const mainContent = React.useRef(null);
@@ -50,14 +65,15 @@ const Admin = (props) => {
 
   return (
     <>
+    
       <Sidebar
         {...props}
         routes={routes}
         logo={{
           innerLink: "/admin/index",
           imgSrc: require("../assets/img/brand/rooman-w-logo.png").default,
-          imgAlt: "...",
-        }}
+          imgAlt: "Rooman Technologies",
+        }} 
       />
       <div className="main-content" ref={mainContent}>
         <AdminNavbar

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, NavLink, Redirect, useHistory } from "react-router-dom";
 import jwt_decode from "jwt-decode";
@@ -19,14 +18,16 @@ import {
   Col,
 } from "reactstrap";
 import { useEffect, useState } from "react";
-import Instance from "requests/axios";
 import {useForm} from 'react-hook-form';
 import axios from "axios";
+import Cryptr from "cryptr";
+import * as Aes from 'aes-256-gcm';
+import { transpile } from "typescript";
 
 
 
 
-const Login = () => {
+const Login = (props) => {
   const loginData = {
     EmailAddress: "",
     password:"",
@@ -46,14 +47,20 @@ const Login = () => {
 
 
 
-  const handleInputChange = (e) =>{
+
+
+
+
+
+  const handleInputChange = (e) =>{ 
      setLoginData({
        ...LoginData,
        [e.target.name]: e.target.value
      });
-     console.log(LoginData);
+     console.log(LoginData.password);
   }
   
+     
 
   const onSubmit = data =>{
     
@@ -61,10 +68,10 @@ const Login = () => {
     axios({
       method:'POST',
       mode:'no-cors',
-      url: 'http://192.168.100.7:3000/login',
+      url: 'http://localhost:4000/login',
       data:LoginData,
-    }).then(res=>
-      {
+    }).then(res=> 
+    {
         //users/authenticate/
         // if (res.data.token!=null){
         //   console.log(res.data.token)
@@ -75,13 +82,13 @@ const Login = () => {
         
 
         if(res){
-
+          console.log(res.data.accesstoken)
           let token = res.data.accesstoken;
           let decoded = jwt_decode(token);
           
           localStorage.setItem('details', JSON.stringify(decoded));
           let temp = JSON.parse(localStorage.getItem('details'));
-          console.log(temp.id);
+          console.log(temp._id);
           history.push(`/admin/index:`)
           
         
@@ -95,6 +102,9 @@ const Login = () => {
     )
     
   }
+
+ 
+
 
   // async function loginFun(){
   //   let result = await fetch("localhost:4000/login/",requestOptions);
@@ -178,7 +188,7 @@ const Login = () => {
                     type="email"
                     autoComplete="new-email"
                     pattern = "^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$"
-                    required
+                    require
                     onChange = {handleInputChange}
                     name = "EmailAddress"
                   />
@@ -233,13 +243,15 @@ const Login = () => {
         </Card>
         <Row className="mt-3">
           <Col xs="6">
-            <a
+            < Link to = '/auth/reset-password'
               className="text-light"
               href="#pablo"
-              onClick={(e) => e.preventDefault()}
+              // onClick = {
+              //   () => history.push('/auth/reset-password')
+              // }
             >
               <small>Forgot password?</small>
-            </a>
+            </Link>
           </Col>
           {/* <Col className="text-right" xs="6">
             <a

@@ -18,10 +18,29 @@ import {
   Container,
   Media,
 } from "reactstrap";
+import logout from '../Network/apiAxios'
 
-let details = JSON.parse(localStorage.getItem('details'))
-console.log(details)
+
 const AdminNavbar = (props) => {
+let details = JSON.parse(localStorage.getItem('details'))
+
+  const logOut = async () => {
+    const token = details.accesstoken;
+    console.log(token);
+    if (token) {
+      const response = await logout(token);
+      const {
+        data
+      } = response;
+      console.log(data)
+      if (data == 'Logged Out') {
+        console.log("logout hone walla hai!!!!!!!!!!!!!!!!!")
+        localStorage.removeItem("details");
+        
+        props.history.push("/auth/login");
+      }
+    }
+  }
   return (
     <>
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
@@ -59,7 +78,7 @@ const AdminNavbar = (props) => {
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
                     <span className="mb-0 text-sm font-weight-bold">
-                     {details.firstName}
+                     {details.Firstname}
                     </span>
                   </Media>
                 </Media>
@@ -85,7 +104,7 @@ const AdminNavbar = (props) => {
                   <span>Support</span>
                 </DropdownItem>
                 <DropdownItem divider />
-                <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
+                <DropdownItem href="#pablo" onClick={logOut}>
                   <i className="ni ni-user-run" />
                   <span>Logout</span>
                 </DropdownItem>
@@ -99,3 +118,4 @@ const AdminNavbar = (props) => {
 };
 
 export default AdminNavbar;
+

@@ -34,10 +34,30 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import logout from "components/Network/apiAxios";
 
-var ps;
 
 const Sidebar = (props) => {
+
+  let details = JSON.parse(localStorage.getItem('details'))
+
+  const logOut = async () => {
+    const token = details.accesstoken;
+    console.log(token);
+    if (token) {
+      const response = await logout(token);
+      const {
+        data
+      } = response;
+      console.log(data)
+      if (data == 'Logged Out') {
+        console.log("logout hone walla hai!!!!!!!!!!!!!!!!!")
+        localStorage.removeItem("details");
+
+        props.history.push("/auth/login");
+      }
+    }
+  }
   const [collapseOpen, setCollapseOpen] = useState();
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
@@ -163,7 +183,7 @@ const Sidebar = (props) => {
                 <span>Support</span>
               </DropdownItem>
               <DropdownItem divider />
-              <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
+              <DropdownItem href="#pablo" onClick={()=>logOut}>
                 <i className="ni ni-user-run" />
                 <span>Logout</span>
               </DropdownItem>
